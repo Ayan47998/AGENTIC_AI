@@ -1,0 +1,10 @@
+streamlit
+langchain
+langgraph
+chromadb
+unstructured
+huggingface_hub
+sentence-transformers
+transformers
+pdfplumber
+python-docx

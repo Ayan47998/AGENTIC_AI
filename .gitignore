@@ -1,0 +1,18 @@
+.en
+# Python
+__pycache__/
+*.py[cod]
+*.egg
+*.egg-info/
+dist/
+build/
+*.log
+
+# VS Code
+.vscode/
+
+# Environment files
+.env
+*.env
+
+
