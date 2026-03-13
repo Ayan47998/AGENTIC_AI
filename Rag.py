@@ -1,6 +1,5 @@
-
 import os
-from langchain.document_loaders import PyPDFLoader, UnstructuredWordDocumentLoader
+from langchain.document_loaders import PyPDFLoader, UnstructuredFileLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.vectorstores import Chroma
 from langchain.embeddings import HuggingFaceEmbeddings
@@ -27,16 +26,22 @@ if not os.path.exists(VECTORSTORE_DIR):
 # Step 1: Load documents
 def load_documents():
     documents = []
-    for filename in os.listdir(DATA_DIR):
+    files = os.listdir(DATA_DIR)
+    if not files:
+        raise FileNotFoundError(f"No files found in data directory '{DATA_DIR}'.")
+    for filename in files:
         filepath = os.path.join(DATA_DIR, filename)
-        if filename.endswith(".pdf"):
-            loader = PyPDFLoader(filepath)
-        elif filename.endswith(".docx"):
-            loader = UnstructuredWordDocumentLoader(filepath)
-        else:
-            continue
-        docs = loader.load()
-        documents.extend(docs)
+        try:
+            if filename.endswith(".pdf"):
+                loader = PyPDFLoader(filepath)
+            elif filename.endswith(".docx"):
+                loader = UnstructuredFileLoader(filepath)
+            else:
+                continue
+            docs = loader.load()
+            documents.extend(docs)
+        except Exception as e:
+            print(f"⚠️ Error loading '{filename}': {e}")
     return documents
 
 # Step 2: Split into chunks
